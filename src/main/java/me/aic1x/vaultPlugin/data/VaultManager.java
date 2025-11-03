@@ -1,6 +1,7 @@
 package me.aic1x.vaultPlugin.data;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
@@ -65,6 +66,36 @@ public class VaultManager {
 
     }
 
+    public boolean loadVaults(){
+        File file = new File(javaPlugin.getDataFolder(), "vaults.yml");
+        if(!file.exists()){
+            return false;
+        }else{
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            ConfigurationSection vaultSection = config.getConfigurationSection("vaults");
+            if (vaultSection == null) return false;
+            for (String uuidKey : vaultSection.getKeys(false)) {
+                ConfigurationSection slots = vaultSection.getConfigurationSection(uuidKey);
+                if (slots == null) continue;
+                UUID uuid = UUID.fromString(uuidKey);
+                Vault v = new Vault(uuid);
+                v.inv = Bukkit.createInventory(v, 54);
+                for (String slotKey : slots.getKeys(false)) {
+                    ItemStack item = config.getItemStack("vaults." + uuidKey + "." + slotKey);
+                    if (item != null) {
+                        int slot = Integer.parseInt(slotKey);
+                        v.inv.setItem(slot, item);
+                    }
+                }
+                vaults.put(uuid, v);
+            }
+            Bukkit.getLogger().info("Loaded " + vaults.size() + " vault(s) from vaults.yml");
+
+            return true;
+        }
+        }
     }
+
+
 
 

@@ -11,6 +11,7 @@ public final class VaultPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         vaultManager = new VaultManager(this);
+        vaultManager.loadVaults();
 
         getCommand("vault").setExecutor(new openVault(vaultManager));
         getServer().getPluginManager().registerEvents(new VaultCloseListener(vaultManager), this);
@@ -19,6 +20,7 @@ public final class VaultPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        vaultManager.saveVaults();
 
     }
 }
