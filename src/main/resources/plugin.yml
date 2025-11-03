@@ -4,3 +4,7 @@ main: me.aic1x.vaultPlugin.VaultPlugin
 api-version: '1.21'
 authors: [ aic1x ]
 description: Simple vault plugin.
+commands:
+  vault:
+    description: Opens a personal vault
+    usage: /<command>
